@@ -22,8 +22,6 @@ server <- function(input, output) {
         
     })
     
-    help_text2 = "Many of the statistics can be run without a genome file but the genome file does allow missing genes to be pin pointed and gene usage to be analysed."
-    
     observeEvent(input$go, {
         output$openResultsBtn <- renderUI({
             
