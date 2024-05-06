@@ -17,7 +17,9 @@ output:
          toc:
             scroll_highlight: yes
             collapse: subsection
-            depth: 4            
+            depth: 4
+            before: |
+                <li class="toc-logo"><a href="./"><img src="logo.svg"></a></li>
          download: yes
          sharing: no
          keep_md: true
