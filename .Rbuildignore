@@ -15,3 +15,4 @@ LICENSE
 ^.*\.code-workspace
 ^R/\.repcred-package.R
 ^logo
+^profiling
