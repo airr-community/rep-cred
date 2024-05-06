@@ -9,12 +9,9 @@
 }
 
 .shiny-notification {
-    position: absolute;
-    top: calc(50%);
-    left: calc(50%);
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-    //width: 300px;
+    position: fixed;
+    top: calc(55%);
+    left: calc(35%);
 }
 
 .book .book-summary {
