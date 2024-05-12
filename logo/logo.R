@@ -8,7 +8,7 @@ sysfonts::font_add_google("Noto Sans Mono")
 
 subplot <- ggplot(data.frame(x=0, y=0),
                   aes(x,y)) + 
-    geom_text(label=fontawesome('fa-thumbs-up'),
+    geom_text(label=fontawesome('fa-check'),
               family='fontawesome-webfont', 
               color="white",
               size=20) +
