@@ -18,12 +18,14 @@ ui <- fluidPage(
     # App title
     fluidRow(
         id="div-main",
+        style = "width:80%; min-width:500px; height:250px",
         tags$img(src = "logo.svg", width = "100px"),
         tags$h1("Rep-Cred"),
         tags$strong("Credibility of a repertoire"),
         tags$p("Summary statistics and graphical information to quickly asses the quality of a repertoire."),
         tabsetPanel(
             tabPanel("Rep-Cred",
+                     style = "width:100%",
                      br(),
                      # Input
                      fileInput("file1", 
@@ -60,8 +62,16 @@ ui <- fluidPage(
                      uiOutput("openResultsBtn")                     
                      
             ),
-            tabPanel("Help"),
-            tabPanel("About")
+            tabPanel("Help",
+                     style = "width:100%",
+                     br(),
+                     includeMarkdown("help.md")
+                     ),
+            tabPanel("About",
+                     style = "width:100%",
+                     br(),
+                     includeMarkdown("about.md")
+                     )
         )
     )
 )

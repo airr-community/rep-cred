@@ -2,7 +2,7 @@
     margin: 0;
     // position: fixed;
     position: absolute;
-    top: calc(50%);
+    top: calc(20%);
     left: calc(50%);
     -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
