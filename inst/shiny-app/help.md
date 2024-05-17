@@ -6,7 +6,7 @@ easily digestible summary that can be used by novices and experts alike.
 
 The only requirement to run Rep-Cred is a file describing IG and/or TCR 
 rearrangements in the [AIRR TSV format](https://docs.airr-community.org/en/stable/datarep/rearrangements.html). 
-By default, all repertoires are randomly down-sampled to XXX rearrangements; 
+By default, all repertoires are randomly down-sampled to 5000 rearrangements; 
 we find that this still provides an accurate assessment of repertoire 
 credibility while maintaining a reasonable run time. Finally, if a custom 
 (non-IMGT?) database was used to annotate the rearrangements, this should be 
