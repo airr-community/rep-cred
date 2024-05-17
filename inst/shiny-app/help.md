@@ -6,7 +6,7 @@ easily digestible summary that can be used by novices and experts alike.
 
 The only requirement to run Rep-Cred is a file describing IG and/or TCR 
 rearrangements in the [AIRR TSV format](https://docs.airr-community.org/en/stable/datarep/rearrangements.html). 
-You can find a small [example repertoire here](https://raw.githubusercontent.com/airr-community/rep-cred/master/inst/extdata/ExampleDb.tsv){target="_blank"}.
+You can find a small <a href="https://raw.githubusercontent.com/airr-community/rep-cred/master/inst/extdata/ExampleDb.tsv" target="_blank">example repertoire here</a>.
 
 
 By default, all repertoires are randomly down-sampled to 5000 rearrangements; 
