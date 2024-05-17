@@ -16,10 +16,9 @@ calculated accurately.
 [Example repertoire](https://raw.githubusercontent.com/airr-community/rep-cred/master/inst/extdata/ExampleDb.tsv)
 
 To get help or report a bug, please file an issue on Rep-Cred’s github 
-page at [https://github.com/airr-community/rep-cred/issues](https://github.com/airr-community/rep-cred/issues). 
-Although Rep-Cred will not be under active development once the initial release is complete, the program is designed to be modular and accept new functions/metrics with ease. We welcome pull requests 
-(please see [https://github.com/airr-community/airr-standards/blob/master/CONTRIBUTING.rst](https://github.com/airr-community/airr-standards/blob/master/CONTRIBUTING.rst)); 
-all other feature requests will be evaluated and prioritized with respect to our 
-availability to work on adding them.
+page at [https://github.com/airr-community/rep-cred/issues](https://github.com/airr-community/rep-cred/issues).
+
+Rep-Cred is designed to be modular and accept new functions/metrics with ease. We welcome pull requests 
+(please see [https://github.com/airr-community/airr-standards/blob/master/CONTRIBUTING.rst](https://github.com/airr-community/airr-standards/blob/master/CONTRIBUTING.rst)). Other feature requests will be evaluated and prioritized.
 
 
