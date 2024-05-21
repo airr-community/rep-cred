@@ -31,7 +31,7 @@ docker run --rm --network host -ti --user shiny -p 3838:3838 airrc/rep-cred:late
 To open a terminal inside the container use:
 
 ```
-docker run --rm --user shiny -p 3838:3838 airrc/rep-cred:latest bash
+docker run --rm -ti --user shiny -p 3838:3838 airrc/rep-cred:latest bash
 ```
 
 ## Docker - command line
