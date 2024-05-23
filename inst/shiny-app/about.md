@@ -1,2 +1,2 @@
-Rep-Cred is maintained by the [Software Working Group](https://www.antibodysociety.org/the-airr-community/airr-working-groups/software/) 
+RepCred is maintained by the [Software Working Group](https://www.antibodysociety.org/the-airr-community/airr-working-groups/software/) 
 of the [Adaptive Immune Receptor Repertoire Community (AIRR-C)](http://airr-community.org/).

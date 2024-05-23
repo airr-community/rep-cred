@@ -15,7 +15,7 @@ subplot <- ggplot(data.frame(x=0, y=0),
     theme_void()
 
 sticker(subplot,
-        package="Rep-Cred", 
+        package="RepCred", 
         p_size=8, 
         p_color = "#FFFFFF",
         p_family = "Noto Sans Mono",
@@ -31,7 +31,7 @@ sticker(subplot,
 
 
 sticker(subplot,
-        package="Rep-Cred", 
+        package="RepCred", 
         p_size=8, 
         p_color = "#FFFFFF",
         p_family = "Noto Sans Mono",
@@ -44,3 +44,4 @@ sticker(subplot,
         filename=file.path(here::here(),
                            "inst","rstudio","templates","project","project_files",
                            "logo.svg"))
+
