@@ -1,11 +1,15 @@
 --- 
-title: "Credibility of a repertoire report"
+title: "Credibility of a repertoire report: `r basename(params$rep)`"
 author: ""
-date: "Updated: `r date()`"
+date: "Generated: `r date()`"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
-bibliography: "references.bib"
+bibliography: references.bib
+nocite:
+- '@zylstra1998pcr'
+- '@olson2019sumrep'
+- '@marquez2022adaptive'
 biblio-style: apalike
 link-citations: yes
 description: "Analysis notebook"
@@ -23,6 +27,7 @@ output:
          download: yes
          sharing: no
          keep_md: true
+         self_contained: true
     bookdown::pdf_book:
         keep_tex: false
         toc: true
@@ -111,7 +116,12 @@ section_11 = green
 ```
 # Quality Control Stats
 
-```{r missing_columns, warning=TRUE,results="asis"}
+Repcred will run whatever analyses it can with a minimal number of input columns, but can
+provide more information if more columns are available. Specific issues are noted in the
+report. You may wish to check that all the columns you expect to be populated are present.
+Columns that are present but missing data in some rows are also flagged for review.
+
+```{r missing_columns, warning=FALSE,results="asis"}
 #SECTION 2
 is_compliant <-
   suppressWarnings(airr::validate_rearrangement(repertoire)) # TODO: consider if to display the warning
@@ -138,6 +148,22 @@ if (length(missing_columns) > 0) {
 
 
 # Non-nucleotides in sequence
+
+This chapter reports non-nucleotide characters (anything other than A, C, G, or T) that are
+found in the annotated sequences. The presence of other characters such as N, X or gap
+characters may indicate quality issues, although leading Ns may indicate primer masking,
+which is not a problem.
+
+With Illumina paired-end reads, non-nucleotides in the middle of a sequence may indicate
+that the reads don’t overlap, for example with long CDR3s. This may be inevitable in some
+experimental configurations but is something to be aware of during analysis.
+Leaving primer masking and paired read gaps aside, generally speaking one would expect
+the majority of reads not to include non-nucleotide symbols. The exact figure will depend
+upon experimental design, but look for variation between samples and possible correlation
+with overall read quality as reported by FASTQC, and consider whether such samples meet
+your experimental objectives.
+
+What does the percentage mean in the analysis? Ideally we would like to see:percentage of reads containing non-nucleotides, and percentage of non-nucleotide symbols across symbols in all reads.
 
 ```{r check_nucleotides, warning=FALSE, results='asis'}
 #SECTION 3
@@ -172,11 +198,28 @@ cols_non_prod_breakdown <-  non_prod &
 
 ## Productive vs. non-productive sequences
 
+Non-productive sequences are those which are unlikely to translate to well-formed receptor
+protein, for example because of the presence of stop codons or absence of conserved
+residues at specific locations.
+
+Non-productive sequences are found in biological samples, hence their presence in a
+repertoire is expected. Nevertheless they can also be listed in a repertoire as a result of
+technical problems in sequencing or incorrect annotation. Out-of-frame sequences are
+always non-productive.
+
+If a high level of non-productive sequences is recorded, say &gt;=10%, it is worth examining a
+sample of non-productive reads to establish the cause. A high number of out-of-frame
+sequences or sequences with stop codons could indicate a sample preparation or
+sequencing quality problem. A high number of non-productive in-frame sequences without
+stop codons could indicate issues with annotation. If you see the latter, analyse some
+sample sequences with an online service such as IMGT VQUEST or IgBLAST. If the
+sequences are annotated as productive online, suspect a problem in your annotation toolset.
+
 ```{r,  eval=!non_prod, results='asis'}
 cat("Skipping this section: non-productive sequences not present in the repertoire.")
 ```
 
-```{r non_prod_figure, fig.cap= "The number of productive and non productive sequences. The x-axis is the productive definition, and the y-axis is the abdunce count.", warning=TRUE,results="asis", eval=non_prod}
+```{r non_prod_figure, fig.cap= "The number of productive and non productive sequences. The x-axis is the productive definition, and the y-axis is the abdunce count.", warning=FALSE,results="asis", eval=non_prod}
 #SECTION 4
 ggplot2::ggplot(
   prod_info, 
@@ -204,7 +247,7 @@ writeLines(paste0("Retrived information from the vj_in_frame column, precentage 
 
 `r  if(cols_non_prod_breakdown){"## Non-productive sequences breakdown"}`
 
-```{r, fig.cap= "A breakdown of the type of non-productive sequences. The x-axis is the non-productive type, and the y-axis is the abdunce count. The red color represents sequences that has both a stop codon and the V-J is not in frame, gray color represents sequences that are in either types.", warning=TRUE, eval=cols_non_prod_breakdown}
+```{r, fig.cap= "A breakdown of the type of non-productive sequences. The x-axis is the non-productive type, and the y-axis is the abdunce count. The red color represents sequences that has both a stop codon and the V-J is not in frame, gray color represents sequences that are in either types.", warning=FALSE, eval=cols_non_prod_breakdown}
 ### table the columns that indicate non-productive sequences.
 
 ## check the cols are booleans. If not change
@@ -252,6 +295,14 @@ knitr::kable(data.frame("Category" = c("Contains stop codons",
 
 ## Sequence length distribution
 
+The input sequence length distribution will depend on the sequencing method and the
+annotation process. If the input sequence represents the assembled or consensus reads
+from the sequencer, check that they reflect expectation - e.g. Illumina reads would be
+expected to max out at the read length, but will have a distributions of lengths below the max
+because of paired-read overlap. The V(D)J sequence length should always be distributed
+around a length that is determined by the primer design (i.e. full-length sequences, or partial-
+length, depending on design).
+
 ```{r,  eval=!sequence_alignment_available, results='asis'}
 cat("Skipping this section: `sequence_alignment` is empty.")
 ```
@@ -288,6 +339,11 @@ knitr::kable(length_info)
 
 # Annotation Calls Statistics
 
+Gene deletions are common, so do not expect to see every gene represented in every
+sample. However, it is worth checking that there are no systematic issues, for example
+checking that all V-gene families are represented as expected, bearing in mind the primer
+set that was used. Gaps could indicate that some primers are not amplifying. Unrepresented
+J-gene families can be indicative of annotation/germline set problems.
 
 ```{r calls_info}
 v_usage_info <- getGeneAlleleStat(repertoire, reference = germline_reference, call = "v_call")
@@ -318,7 +374,7 @@ if(!is.null(germline_reference)) {
 
 ## Number of unique allele calls per gene
 
-```{r fig.height=size, warning=TRUE, fig.subcap=c("Unique allele calls per gene. Each row is a different gene segment (V/D/J). The x-axis is the different genes, and the y-axis is the count."),results="asis"}
+```{r fig.height=size, warning=FALSE, fig.subcap=c("Unique allele calls per gene. Each row is a different gene segment (V/D/J). The x-axis is the different genes, and the y-axis is the count."),results="asis"}
 ggplot2::ggplot(appearance_info, 
   ggplot2::aes(x = !!as.name("gene"), y = !!as.name("count_unique_alleles"))) +
   ggplot2::geom_col() + 
@@ -333,7 +389,7 @@ ggplot2::ggplot(appearance_info,
 
 ## Relative usage
 
-```{r fig.height=size, warning=TRUE, fig.subcap=c("Gene usage. Each row is a different gene segment (V/D/J). The x-axis is the different genes, and the y-axis is the relative usage."),results="asis"}
+```{r fig.height=size, warning=FALSE, fig.subcap=c("Gene usage. Each row is a different gene segment (V/D/J). The x-axis is the different genes, and the y-axis is the relative usage."),results="asis"}
 
 usage_info <- appearance_info %>%
   dplyr::group_by(!!as.name("segment")) %>%
@@ -353,7 +409,7 @@ ggplot2::ggplot(usage_info,
 
 ```
 
-```{r warning=TRUE,results="asis"}
+```{r warning=FALSE,results="asis"}
 # TODO: missing primers, gene frequency. 
 
 ## get gene usage. Get the genes with alakazam getGene and calculate the relative usage. If germline is supplied. Display only genes within the germline. Else show all.
@@ -426,38 +482,39 @@ ggplot2::ggplot(usage_info,
 
 # General Sumrep Statistics
 
+These statistics are provided to give a general indication of repertoire characteristics. The analysis is taken from Sumrep.
 
 ```{r,  eval=!sequence_alignment_available, results='asis'}
 cat("Skipping this section: `sequence_alignment` is empty.")
 ```
 
-```{r warning=TRUE,results="asis", eval=any(!is.na(repertoire$sequence_alignment))}
+```{r, warning=FALSE, error=FALSE, message=FALSE,results="asis", eval=any(!is.na(repertoire$sequence_alignment))}
 
 ### summrep statistics graphs = hot/cold spots, GC content, Mutation and germline
 
 ### hot cold, and GC based on the sequence_alignment column
 
-hot_data <- repcred:::getHotspotCountDistribution(repertoire)
-cold_data <- repcred:::getColdspotCountDistribution(repertoire)
-gc_data <- repcred:::getGCContentDistribution(repertoire)
-
-sumrep_info <- data.frame(
-  "Category" = c(rep("HotSpot",length(hot_data)),
-                 rep("ColdSpot",length(cold_data)),
-                 rep("GC content",length(gc_data))),
-  "values" = c(hot_data,cold_data,gc_data)
-)
-
-sumrep_info$Category <- factor(sumrep_info$Category, levels = c("HotSpot","ColdSpot","GC content"))
-
-ggplot2::ggplot(sumrep_info,
-                ggplot2::aes(x=1,y=values, color=Category)) + 
-  ggplot2::geom_violin() + 
-  ggplot2::geom_boxplot(width = 0.2, outlier.shape = NA) + 
-  ggplot2::guides(color = "none") + 
-  ggpubr::theme_pubclean() +
-  ggplot2::labs(x="",y="") + 
-  facet_wrap(c("Category"), scales = "free", drop = T)
+# hot_data <- suppressWarnings(repcred:::getHotspotCountDistribution(repertoire))
+# cold_data <- suppressWarnings(repcred:::getColdspotCountDistribution(repertoire))
+# gc_data <- suppressWarnings(repcred:::getGCContentDistribution(repertoire))
+# 
+# sumrep_info <- data.frame(
+#   "Category" = c(rep("HotSpot",length(hot_data)),
+#                  rep("ColdSpot",length(cold_data)),
+#                  rep("GC content",length(gc_data))),
+#   "values" = c(hot_data,cold_data,gc_data)
+# )
+# 
+# sumrep_info$Category <- factor(sumrep_info$Category, levels = c("HotSpot","ColdSpot","GC content"))
+# 
+# ggplot2::ggplot(sumrep_info,
+#                 ggplot2::aes(x=1,y=values, color=Category)) + 
+#   ggplot2::geom_violin() + 
+#   ggplot2::geom_boxplot(width = 0.2, outlier.shape = NA) + 
+#   ggplot2::guides(color = "none") + 
+#   ggpubr::theme_pubclean() +
+#   ggplot2::labs(x="",y="") + 
+#   facet_wrap(c("Category"), scales = "free", drop = T)
 
 
 
@@ -466,9 +523,9 @@ plot(0:1,xaxt='n',yaxt='n',ann=FALSE)
 legend("center",c("Mean +- standard dev","5% and 95% quantile points","Min and Max Value points"),fill=c("Dark blue","light blue","red"))
 
 if("sequence_alignment" %in% colnames(repertoire)&!any(is.na(repertoire$sequence_alignment))){
-repcred:::hotspotCountDist(repertoire)
-repcred:::coldspotCountDist(repertoire)
-repcred:::gcContentDistribution(repertoire)
+suppressWarnings(repcred:::hotspotCountDist(repertoire))
+suppressWarnings(repcred:::coldspotCountDist(repertoire))
+suppressWarnings(repcred:::gcContentDistribution(repertoire))
 }else{
    section_6 = amber
     writeLines("Missing column : sequence_alignment \n Unable to run statistics : getHotspotCountDistribution , getColspotCountDistribution, getGCContentDistribution")
@@ -491,7 +548,7 @@ repcred:::gcContentDistribution(repertoire)
 
 
 
-```{r warning=TRUE,results="asis"}
+```{r warning=FALSE,results="asis"}
 #  Pairwise Statistics
 
 # #SECTION 7
@@ -524,7 +581,7 @@ repcred:::gcContentDistribution(repertoire)
 ```
 
 
-```{r warning=TRUE,results="asis",eval=!all(is.na(repertoire$junction_aa))}
+```{r warning=FALSE,results="asis",eval=!all(is.na(repertoire$junction_aa))}
 #SECTION 8
 # plot(0:1,xaxt='n',yaxt='n',ann=FALSE)
 # legend("center",c("Mean +- standard dev","5% and 95% quantile points","Min and Max Value points"),fill=c("Dark blue","light blue","red"))
@@ -545,7 +602,7 @@ repcred:::gcContentDistribution(repertoire)
 
 
 
-```{r warning=TRUE,results="asis"}
+```{r warning=FALSE,results="asis"}
 #  Insertion Length Distributions
 #SECTION 9
 # plot(0:1,xaxt='n',yaxt='n',ann=FALSE)
@@ -564,7 +621,7 @@ repcred:::gcContentDistribution(repertoire)
 ```
 
 
-```{r warning=TRUE,results="asis"}
+```{r warning=FALSE,results="asis"}
 #SECTION 10
 #  Prime deletion Distributions Statistics
 
@@ -630,7 +687,7 @@ multiple_vgene = FALSE
 `r  if(chimera){"#  Possible Chimerisms\nBelow table shows the comparison between the total number of sequences compares to the total number of unique CDR3 sequences and then compared to the number of CDR3 sequences that have multiple different v-call genes associated with them."}`
 
 
-```{r CDR3_Chimera_Check, warning = TRUE ,fig.width=9, eval=chimera}
+```{r CDR3_Chimera_Check, warning = FALSE ,fig.width=9, eval=chimera}
 #SECTION 11
 
 cdr3_seq_info = checkCDR3(repertoire_chimera)
@@ -707,5 +764,4 @@ repcred:::plotVgeneDist(cdr3_data_table = cdr3_vcalls,
 #kbl(as.data.table(findAmplificationAreas(repertoire)))
 repcred:::addTrafficLighting(c(section_1,section_2,section_3,section_4,section_5,section_6,section_7,section_8,section_9,section_10,section_11))
 ```
-
 
