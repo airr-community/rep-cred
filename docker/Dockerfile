@@ -1,4 +1,4 @@
-FROM rocker/shiny:4.3.3
+FROM rocker/shiny:4.4.1
 
 LABEL maintainer="ssnn"
 
@@ -26,13 +26,14 @@ RUN export DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get install -
 
 ARG R_DEPS="c('devtools', \
               'BiocManager')"
-RUN Rscript -e "install.packages(${R_DEPS}, dependencies=TRUE, clean=TRUE)"
-RUN Rscript -e "BiocManager::install(c('Biostrings', 'GenomicAlignments', 'IRanges'))"
-#RUN Rscript -e "devtools::install_github('LuciaRotger/CollessLike', ref='master', dependencies=TRUE)"
-#RUN Rscript -e "devtools::install_github('matsengrp/sumrep', ref='master', dependencies=TRUE)"
-RUN Rscript -e "devtools::install_github('airr-community/rep-cred', ref='master', dependencies=TRUE)"
-#RUN Rscript -e "p<-Sys.getenv('PATH');Sys.setenv(PATH = paste(p, dirname(system.file('repcred.R', package='repcred')), sep = ':'))"
+ARG BIOC_DEPS="c('Biostrings', \
+                'GenomicAlignments', \
+                'IRanges')"
+RUN Rscript -e "install.packages(${R_DEPS}, dependencies=TRUE, clean=TRUE);lapply(${R_DEPS}, require, character.only = TRUE)"
+RUN Rscript -e "BiocManager::install(${BIOC_DEPS});lapply(${BIOC_DEPS}, require, character.only = TRUE)"
+RUN Rscript -e "devtools::install_github('airr-community/rep-cred', ref='master', dependencies=TRUE);library(repcred)"
 RUN Rscript -e "repcred<-system.file('repcred.R', package='repcred');file.copy(repcred,'/usr/local/bin/repcred')" \
     && chmod +x /usr/local/bin/repcred
 WORKDIR /home
-CMD Rscript -e "repcred::repcredWeb(launch.browser = F)"
+SHELL ["/bin/bash", "-c"]
+ENTRYPOINT Rscript -e "repcred::repcredWeb(launch.browser = F)"
