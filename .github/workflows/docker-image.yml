@@ -31,8 +31,7 @@ jobs:
         run: |
           if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
           BiocManager::install(c("Biostrings", "GenomicAlignments", "IRanges"))
-          install.packages(c("airr", "alakazam", "ape", "ggpubr", "kableExtra", "optparse"))
-          install.packages(c("airr", "alakazam", "ape", "ggpubr", "kableExtra", "markdown", "optparse"))
+          install.packages(c("airr", "alakazam", "ape", "ggpubr", "kableExtra", "markdown", "optparse", "tigger"))
         shell: Rscript {0}
 
       - name: Document
