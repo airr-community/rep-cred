@@ -18,6 +18,7 @@
 #' @name     repcred
 #' 
 #' @import      alakazam
+#' @import      tigger
 #' @import      ggplot2
 #' @import      stringr
 #' @import      dplyr
