@@ -67,8 +67,11 @@ if (!(any(opt$FORMAT %in% c("html", "pdf", "all"))) | length(opt$FORMAT)>1) {
     stop("Output format (-f/--format) must be one of: html, pdf, all")
 } 
 
+if (!dir.exists(opt$OUTDIR)) {
+    dir.create(opt$OUTDIR, recursive = T)    
+}
 opt$OUTDIR <- normalizePath(opt$OUTDIR)
-dir.create(opt$OUTDIR, recursive = T)
+
 
 message("\nRunning repcred")
 message("|- Repertoire:\n",  paste("| ", normalizePath(opt$REP)))
