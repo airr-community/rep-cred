@@ -29,8 +29,8 @@ ARG R_DEPS="c('devtools', \
 ARG BIOC_DEPS="c('Biostrings', \
                 'GenomicAlignments', \
                 'IRanges')"
-RUN Rscript -e "install.packages(${R_DEPS}, dependencies=TRUE, clean=TRUE);lapply(${R_DEPS}, require, character.only = TRUE)"
-RUN Rscript -e "BiocManager::install(${BIOC_DEPS});lapply(${BIOC_DEPS}, require, character.only = TRUE)"
+RUN Rscript -e "install.packages(${R_DEPS}, dependencies=TRUE, clean=TRUE);lapply(${R_DEPS}, library, character.only = TRUE)"
+RUN Rscript -e "BiocManager::install(${BIOC_DEPS});lapply(${BIOC_DEPS}, library, character.only = TRUE)"
 RUN Rscript -e "devtools::install_github('airr-community/rep-cred', ref='master', dependencies=TRUE);library(repcred)"
 RUN Rscript -e "repcred<-system.file('repcred.R', package='repcred');file.copy(repcred,'/usr/local/bin/repcred')" \
     && chmod +x /usr/local/bin/repcred
