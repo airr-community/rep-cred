@@ -305,16 +305,21 @@ around a length that is determined by the primer design (i.e. full-length sequen
 length, depending on design).
 
 ```{r,  eval=!sequence_alignment_available, results='asis'}
-cat("Skipping this section: `sequence_alignment` is empty.")
+cat(if (any(!is.na(repertoire$sequence))) {
+  "`sequence_alignment` is empty: only the input sequence lengths are shown."
+} else {
+  "Skipping this section: `sequence` and `sequence_alignment` are empty."
+})
 ```
 
-```{r, fig.cap="The sequences length distribution. The x-axis is the binned sequence lengths, and the y-axis is the frequency.", warning=FALSE,results="asis", eval=sequence_alignment_available}
+```{r, fig.cap="The sequences length distribution. The x-axis is the binned sequence lengths, and the y-axis is the frequency.", warning=FALSE,results="asis", eval=sequence_alignment_available | any(!is.na(repertoire$sequence))}
 
 
 length_info <- data.frame(region = c(rep("Input sequence",nrow(repertoire)),
                                      rep("V(D)J sequence",nrow(repertoire))),
                           lengths = c(nchar(repertoire$sequence),
                                       nchar(gsub("[.]","",repertoire$sequence_alignment))))
+length_info <- length_info[!is.na(length_info$lengths), ]
 
 ggplot2::ggplot(
   length_info, 
