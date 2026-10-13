@@ -15,3 +15,10 @@ test_that("readRepertoire downsamples while streaming", {
     expect_equal(nrow(readRepertoire(file)), nrow(full))
     expect_equal(nrow(readRepertoire(file, n = 1e6)), nrow(full))
 })
+
+test_that("render_report rejects an invalid downsample_n", {
+    file <- system.file("extdata", "ExampleDb.tsv", package = "repcred")
+    for (n in list(0, NA, c(10, 20))) {
+        expect_error(render_report(file, tempdir(), downsample_n = n), "downsample_n")
+    }
+})

@@ -19,8 +19,8 @@ A small example repertoire is available at
 reference set (FASTA) used for annotation can be provided, so that gene and allele
 calls can be checked against it.
 
-By default, repertoires are randomly downsampled to 5000 rearrangements, which
-keeps the run time short while still giving an accurate assessment.
+By default, repertoires are randomly downsampled to 5000 rearrangements (configurable),
+which keeps the run time short while still giving an accurate assessment.
 
 RepCred is maintained by the
 [Software Working Group](https://www.antibodysociety.org/the-airr-community/airr-working-groups/software/)

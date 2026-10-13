@@ -79,7 +79,8 @@ rep_file <- system.file("extdata", "ExampleDb.tsv", package = "repcred")
 ### R function
 
 `repcred_report()` renders the report and returns the path to it. `format` is one of
-`"html"`, `"pdf"` or `"all"`; pass `downsample = FALSE` to analyse every rearrangement.
+`"html"`, `"pdf"` or `"all"`. Pass `downsample = FALSE` to analyse every rearrangement,
+or `downsample_n` to change how many are kept (default 5000).
 
 ```{r, eval=FALSE}
 report <- repcred_report(rep_file, outdir = "repcred-report", format = "html")
@@ -111,7 +112,8 @@ Rscript $(Rscript -e 'cat(system.file("repcred.R", package="repcred"))') \
 ```
 
 Options: `-r` repertoire file, `-o` output directory, `-f` format (`html`, `pdf`, `all`),
-`-d` downsample (`TRUE`/`FALSE`), `-g` comma separated germline FASTA files.
+`-d` downsample (`TRUE`/`FALSE`), `-n` number of sequences to keep when downsampling
+(default 5000), `-g` comma separated germline FASTA files.
 
 The same command is available in the Docker image:
 

@@ -24,6 +24,7 @@ repcredWeb <- function(appDir=system.file("shiny-app",
 #' @param genome_file A reference set of the V(D)J alleles.
 #' @param outdir      Directory where the report will be generated
 #' @param format Output format: html, pdf, all
+#' @param downsample_n Number of sequences to keep when downsampling. Default 5000.
 #' @return Path to the credibility report. 
 #' 
 #' @examples
@@ -31,7 +32,7 @@ repcredWeb <- function(appDir=system.file("shiny-app",
 #' rep_file <- system.file(package="repcred", "extdata", "ExampleDb.tsv")
 #' repcred_report(rep_file, tempdir())
 #' @export
-repcred_report <- function(rep, outdir=NULL,genome_file=NULL, downsample=TRUE, format=c("html", "pdf", "all")) {
+repcred_report <- function(rep, outdir=NULL,genome_file=NULL, downsample=TRUE, format=c("html", "pdf", "all"), downsample_n=5000) {
     format <- match.arg(format)
     if (file.exists(rep)) {
         if (is.null(outdir)) {
@@ -43,7 +44,7 @@ repcred_report <- function(rep, outdir=NULL,genome_file=NULL, downsample=TRUE, f
     
     tryCatch(
         {
-            report_path <- render_report(rep, outdir, genome_file, downsample, format)
+            report_path <- render_report(rep, outdir, genome_file, downsample, format, downsample_n)
         },
         error = function(e) {
             stop(safeError(e))
@@ -135,10 +136,14 @@ getCoreStats <- function(data){
 #' @param downsample Whether report will downsample repertoire
 #' @param genome  A reference set of the V(D)J alleles.
 #' @param format Output format: html, pdf, all
+#' @param downsample_n Number of sequences to keep when downsampling. Default 5000.
 #' @export
-render_report <- function(rep,outdir,genome=NULL,downsample=TRUE,format=c("html","pdf","all")) {
+render_report <- function(rep,outdir,genome=NULL,downsample=TRUE,format=c("html","pdf","all"),downsample_n=5000) {
     # path = "../rstudio/templates/project/project_files/"
     format <- match.arg(format)
+    if (length(downsample_n) != 1 || is.na(downsample_n) || downsample_n < 1) {
+        stop("downsample_n must be a single number >= 1.")
+    }
     if (!dir.exists(outdir)) {
         dir.create(outdir, recursive = T)
     }
@@ -168,7 +173,7 @@ render_report <- function(rep,outdir,genome=NULL,downsample=TRUE,format=c("html"
             clean=FALSE,
             new_session=FALSE,
             params=list("rep"=rep, outdir=outdir,"genome_file"=genome,
-                        "downsample"=downsample))
+                        "downsample"=downsample, "downsample_n"=downsample_n))
     )
     if (format %in% c("pdf", "all")) {
         is_pdf <- grepl("_main.pdf$",book)

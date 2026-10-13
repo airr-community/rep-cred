@@ -43,6 +43,7 @@ params:
    genome_file: !r NULL
    full_or_basic: !r FALSE
    downsample: !r TRUE
+   downsample_n: 5000
 ---
 
 ```{r global-options, include=FALSE, cache=FALSE}
@@ -94,7 +95,7 @@ printParams(params)
 
 ```{r warning=FALSE, results='asis'}
 # Downsampling unless check box unticked
-num_keep <- 5000
+num_keep <- params$downsample_n
 set.seed(12345) # same input gives the same report
 repertoire <- repcred:::readRepertoire(params$rep, n = if (params$downsample) num_keep)
 if (attr(repertoire, "n_input") > nrow(repertoire)) {
