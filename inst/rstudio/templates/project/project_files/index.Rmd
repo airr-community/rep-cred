@@ -5,6 +5,7 @@ date: "Generated: `r date()`"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
+classoption: openany
 bibliography: references.bib
 nocite:
 - '@zylstra1998pcr'
@@ -115,6 +116,7 @@ section_10 = green
 section_11 = green
 
 ```
+
 # Quality Control Stats
 
 Repcred will run whatever analyses it can with a minimal number of input columns, but can
