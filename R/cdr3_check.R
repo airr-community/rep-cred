@@ -28,19 +28,21 @@ checkCDR3 <- function(data) {
   seq_ids_vector = vector()
   row_number = vector()
   cdr3_seqs = vector()
-  cdr3_start = which(colnames(data) == "cdr3_start") # Gives the column number for cdr3_start
-  cdr3_end = which(colnames(data) == "cdr3_end")# Gives the column number for cdr3_end
-  junction = which(colnames(data) == "junction")
-  rev_comp = which(colnames(data) == "rev_comp")
-  cdr3 = which(colnames(data) == "cdr3")
-  sequence_id = which(colnames(data) == "sequence_id")
+  # optional AIRR columns may be absent; treat them as all NA
+  get_col <- function(col) if (col %in% colnames(data)) data[[col]] else rep(NA, nrow(data))
+  cdr3_start = get_col("cdr3_start")
+  cdr3_end = get_col("cdr3_end")
+  junction = get_col("junction")
+  rev_comp = get_col("rev_comp")
+  cdr3 = get_col("cdr3")
+  sequence_id = get_col("sequence_id")
   for (seq in data$sequence) {
     row_count = row_count + 1
-    seq_id = data[[sequence_id]][row_count]
-    start_num = data[[cdr3_start]][row_count]
-    end_num = data[[cdr3_end]][row_count]
-    cdr3_val = data[[cdr3]][row_count]
-    junction_val = data[[junction]][row_count]
+    seq_id = sequence_id[row_count]
+    start_num = cdr3_start[row_count]
+    end_num = cdr3_end[row_count]
+    cdr3_val = cdr3[row_count]
+    junction_val = junction[row_count]
     if (!anyNA(cdr3_val)) {
     cdr3_seqs = c(cdr3_seqs, cdr3_val)
       seq_ids_vector = c(seq_ids_vector, seq_id)
@@ -50,8 +52,8 @@ checkCDR3 <- function(data) {
             cdr3_seqs = c(cdr3_seqs, junction_val)
         row_number = c(row_number, row_count)
         seq_ids_vector = c(seq_ids_vector, seq_id)
-      } else{
-        if (data[[rev_comp]][row_count] %in% c("T", "TRUE", T, TRUE, 1)) {
+      } else if (!anyNA(c(start_num, end_num))) {
+        if (rev_comp[row_count] %in% c("T", "TRUE", T, TRUE, 1)) {
           seq = reverseComplement(DNAString(seq))
           cdr3_seqs = c(cdr3_seqs, substr(toString(seq), start_num, end_num))
           row_number = c(row_number, row_count)
@@ -86,18 +88,16 @@ getVCalls <-
            original_data,
            include_ambiguous_calls) {
     joint = vector()
-    sequence_id = which(colnames(original_data) == "sequence_id")
     num_occur <- data.frame(table(cdr3_seqs_info$cdr3_seqs))
     duplicates = cdr3_seqs_info[cdr3_seqs_info$cdr3_seqs %in% num_occur$Var1[num_occur$Freq >
                                                                                1], ]
     for (seq in unique(duplicates$cdr3_seqs)) {
       duplicated_seqs = duplicates[duplicates$cdr3_seqs == seq, ]
       v_call_genes = vector()
-      related_row = vector()
       gene_matches = array()
       seq_ids  = vector()
       for (row_num in duplicated_seqs$row_number) {
-        v_call_val = original_data[row_num, "v_call"]
+        v_call_val = original_data[["v_call"]][row_num]
         if (include_ambiguous_calls == FALSE &
             grepl(",", v_call_val, fixed = TRUE)) {
           next
@@ -111,9 +111,7 @@ getVCalls <-
           for (single_match in gene_matches[[1]][, i]) {
             if (!is.na(single_match)) {
               v_call_genes = c(v_call_genes, single_match)
-              related_row = c(related_row, row_num + 1)
-              seq_ids = c(seq_ids, original_data[row_num, sequence_id, with =
-                                                   FALSE])
+              seq_ids = c(seq_ids, original_data[["sequence_id"]][row_num])
             }
           }
           i = i + 1

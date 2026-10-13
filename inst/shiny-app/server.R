@@ -32,7 +32,8 @@ server <- function(input, output) {
                         dataValues$repcred_report_path <- repcred_report(input$file1$datapath,
                                                                          genome_file=input$genome$datapath,
                                                                          #sumrep = input$sumrep,
-                                                                         downsample = input$input_downsample)
+                                                                         downsample = input$input_downsample,
+                                                                         downsample_n = input$input_downsample_n)
                         
                     },
                     error = function(e) {

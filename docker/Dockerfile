@@ -36,4 +36,4 @@ RUN Rscript -e "repcred<-system.file('repcred.R', package='repcred');file.copy(r
     && chmod +x /usr/local/bin/repcred
 WORKDIR /home
 SHELL ["/bin/bash", "-c"]
-ENTRYPOINT Rscript -e "repcred::repcredWeb(launch.browser = F)"
+CMD ["Rscript", "-e", "repcred::repcredWeb(launch.browser = F)"]

@@ -43,6 +43,9 @@ ui <- fluidPage(
                      
                      # Downsample
                      checkboxInput("input_downsample", "Downsample repertoire?", value = TRUE ),
+                     conditionalPanel("input.input_downsample",
+                                      numericInput("input_downsample_n", "Number of sequences to keep",
+                                                   value = 5000, min = 1, step = 1000)),
                      # helpText( "Note: Whether to downsample the input repertoire",
                      #           "to 5000 sequences."),
                      

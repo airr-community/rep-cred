@@ -5,6 +5,7 @@ date: "Generated: `r date()`"
 knit: "bookdown::render_book"
 site: bookdown::bookdown_site
 documentclass: book
+classoption: openany
 bibliography: references.bib
 nocite:
 - '@zylstra1998pcr'
@@ -42,6 +43,7 @@ params:
    genome_file: !r NULL
    full_or_basic: !r FALSE
    downsample: !r TRUE
+   downsample_n: 5000
 ---
 
 ```{r global-options, include=FALSE, cache=FALSE}
@@ -88,15 +90,20 @@ if (!is.null(params$genome_file)) {
 } 
 
 printParams(params)
+
+# MD5 checksums: identify exactly which input files the report was made from
+input_files <- c(params$rep, params$genome_file)
+print(kable(data.frame(file = basename(input_files), md5 = unname(tools::md5sum(input_files)))))
 ```
 
 
-```{r warning=FALSE}
-repertoire <- airr::read_rearrangement(params$rep)
+```{r warning=FALSE, results='asis'}
 # Downsampling unless check box unticked
-num_keep <- 5000
-if (params$downsample & nrow(repertoire) > num_keep) {
-  repertoire <- repertoire[sample(nrow(repertoire), size = num_keep),]
+num_keep <- params$downsample_n
+set.seed(12345) # same input gives the same report
+repertoire <- repcred:::readRepertoire(params$rep, n = if (params$downsample) num_keep)
+if (attr(repertoire, "n_input") > nrow(repertoire)) {
+  cat("\n\nDownsampled from", attr(repertoire, "n_input"), "to", nrow(repertoire), "sequences (seed 12345).\n\n")
 }
 
 
@@ -114,6 +121,7 @@ section_10 = green
 section_11 = green
 
 ```
+
 # Quality Control Stats
 
 Repcred will run whatever analyses it can with a minimal number of input columns, but can
@@ -141,8 +149,8 @@ if (length(missing_columns) > 0) {
             formattedWarningMeassage("Required `sequence_alignment` is empty.")
         }
     }
-    #kbl(data.table(column_name = missing_columns))
-    writeLines(paste0(missing_columns, collapse = ","))
+    pct_missing <- round(100 * colMeans(is.na(repertoire[missing_columns])), 1)
+    print(kable(data.frame(column = missing_columns, percent_missing = pct_missing), row.names = FALSE))
 }
 ```
 
@@ -304,16 +312,21 @@ around a length that is determined by the primer design (i.e. full-length sequen
 length, depending on design).
 
 ```{r,  eval=!sequence_alignment_available, results='asis'}
-cat("Skipping this section: `sequence_alignment` is empty.")
+cat(if (any(!is.na(repertoire$sequence))) {
+  "`sequence_alignment` is empty: only the input sequence lengths are shown."
+} else {
+  "Skipping this section: `sequence` and `sequence_alignment` are empty."
+})
 ```
 
-```{r, fig.cap="The sequences length distribution. The x-axis is the binned sequence lengths, and the y-axis is the frequency.", warning=FALSE,results="asis", eval=sequence_alignment_available}
+```{r, fig.cap="The sequences length distribution. The x-axis is the binned sequence lengths, and the y-axis is the frequency.", warning=FALSE,results="asis", eval=sequence_alignment_available | any(!is.na(repertoire$sequence))}
 
 
 length_info <- data.frame(region = c(rep("Input sequence",nrow(repertoire)),
                                      rep("V(D)J sequence",nrow(repertoire))),
                           lengths = c(nchar(repertoire$sequence),
                                       nchar(gsub("[.]","",repertoire$sequence_alignment))))
+length_info <- length_info[!is.na(length_info$lengths), ]
 
 ggplot2::ggplot(
   length_info, 
@@ -679,22 +692,28 @@ suppressWarnings(repcred:::gcContentDistribution(repertoire))
 
 
 ```{r, echo=FALSE}
-repertoire_chimera = repertoire[!is.na(repertoire$sequence),]
-chimera = nrow(repertoire_chimera)!=0
+# rows without cdr3, junction or cdr3_start/end are left out by checkCDR3
+cdr3_seq_info = checkCDR3(repertoire)
+chimera = nrow(cdr3_seq_info)!=0
 multiple_vgene = FALSE
 ```
 
-`r  if(chimera){"#  Possible Chimerisms\nBelow table shows the comparison between the total number of sequences compares to the total number of unique CDR3 sequences and then compared to the number of CDR3 sequences that have multiple different v-call genes associated with them."}`
+#  Possible Chimerisms
+
+The plot below compares the number of unique sequences, the number of unique CDR3 sequences, and the number of CDR3 sequences that have multiple different V genes associated with them.
+
+```{r, eval=!chimera, results='asis'}
+cat("Skipping this section: no CDR3 found (`cdr3`, `junction` and `cdr3_start`/`cdr3_end` are empty).")
+```
 
 
 ```{r CDR3_Chimera_Check, warning = FALSE ,fig.width=9, eval=chimera}
 #SECTION 11
 
-cdr3_seq_info = checkCDR3(repertoire_chimera)
 
 #table(cdr3_seq_info$cdr3_seq)
-cdr3_vcalls = getVCalls(cdr3_seq_info,repertoire_chimera,FALSE)
-total_num_unique_seq = length(unique(repertoire_chimera$sequence))
+cdr3_vcalls = getVCalls(cdr3_seq_info,repertoire,FALSE)
+total_num_unique_seq = length(unique(na.omit(repertoire$sequence)))
 ##
 num_uniq_cdr3_seq = length(unique(cdr3_seq_info$cdr3_seqs))
 

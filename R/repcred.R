@@ -28,16 +28,17 @@
 #' @import      bookdown
 #' @import      stringi
 #' @import      tidyr
-#' @import      xfun
 #' @import      optparse
 #' @importFrom  airr        read_rearrangement write_rearrangement validate_airr
 #' @importFrom  ggpubr      theme_pubclean
 #' @importFrom  kableExtra  kbl
-#' @importFrom  Biostrings  reverseComplement DNAString pairwiseAlignment nucleotideSubstitutionMatrix vcountPattern DNAStringSet
+#' @importFrom  Biostrings  reverseComplement DNAString vcountPattern DNAStringSet
 #' @importFrom  knitr       kable 
 #' @importFrom  data.table  as.data.table data.table .SD
 #' @importFrom  graphics    barplot abline arrows barplot hist
 #' @importFrom  stats       na.omit quantile sd start runif
 #' @importFrom  utils       head
 #' @importFrom  ape         as.DNAbin GC.content
+#' @importFrom  rlang       :=
+#' @importFrom  markdown    mark_html
 NULL
