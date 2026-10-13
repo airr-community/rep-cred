@@ -80,6 +80,41 @@ getNormalSeqNumColor <- function(total_num,normal_num){
 }
 
 
+# Read a repertoire, keeping a uniform random sample of n rows without loading
+# the whole file into memory (#37). Returns all rows if n is NULL or >= rows.
+# The number of rows in the file is kept in attr(, "n_input").
+readRepertoire <- function(file, n = NULL, chunk_size = 1e5) {
+    count_rows <- function() {
+        con <- file(file, "r")
+        on.exit(close(con))
+        readLines(con, 1)
+        total <- 0
+        while (length(x <- readLines(con, chunk_size))) total <- total + sum(nzchar(x))
+        total
+    }
+    n_input <- count_rows()
+    if (is.null(n) || n_input <= n) {
+        repertoire <- airr::read_rearrangement(file)
+    } else {
+        keep <- sort(sample(n_input, n))
+        out <- tempfile(fileext = ".tsv")
+        con <- file(file, "r")
+        on.exit({ close(con); unlink(out) })
+        cat(readLines(con, 1), "\n", file = out, sep = "")
+        seen <- 0
+        while (length(x <- readLines(con, chunk_size))) {
+            x <- x[nzchar(x)]
+            idx <- keep[keep > seen & keep <= seen + length(x)] - seen
+            cat(paste0(x[idx], "\n"), file = out, sep = "", append = TRUE)
+            seen <- seen + length(x)
+        }
+        repertoire <- airr::read_rearrangement(out)
+    }
+    attr(repertoire, "n_input") <- n_input
+    repertoire
+}
+
+
 getCoreStats <- function(data){
     data = na.omit(data)
     min <- range(data)[1]

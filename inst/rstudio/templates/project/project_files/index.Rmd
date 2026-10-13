@@ -92,14 +92,12 @@ printParams(params)
 
 
 ```{r warning=FALSE, results='asis'}
-repertoire <- airr::read_rearrangement(params$rep)
 # Downsampling unless check box unticked
 num_keep <- 5000
-if (params$downsample & nrow(repertoire) > num_keep) {
-  n_in <- nrow(repertoire)
-  set.seed(12345) # same input gives the same report
-  repertoire <- repertoire[sample(nrow(repertoire), size = num_keep),]
-  cat("\n\nDownsampled from", n_in, "to", num_keep, "sequences (seed 12345).\n\n")
+set.seed(12345) # same input gives the same report
+repertoire <- repcred:::readRepertoire(params$rep, n = if (params$downsample) num_keep)
+if (attr(repertoire, "n_input") > nrow(repertoire)) {
+  cat("\n\nDownsampled from", attr(repertoire, "n_input"), "to", nrow(repertoire), "sequences (seed 12345).\n\n")
 }
 
 
