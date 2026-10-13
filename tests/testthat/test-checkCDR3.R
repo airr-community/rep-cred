@@ -16,3 +16,10 @@ test_that("getVCalls returns character columns for any table type", {
         expect_true(all(vapply(out, is.character, logical(1))))
     }
 })
+
+test_that("getGeneAlleleStat adds each unobserved reference gene once", {
+    rep <- data.frame(sequence_id = "a", v_call = "IGHV1-2*01")
+    ref <- c("IGHV1-2*01" = "ACGT", "IGHV1-58*01" = "ACGT", "IGHV1-58*02" = "ACGT")
+    invisible(capture.output(out <- getGeneAlleleStat(rep, reference = ref, call = "v_call")))
+    expect_equal(sum(out$gene_data$gene == "IGHV1-58"), 1)
+})

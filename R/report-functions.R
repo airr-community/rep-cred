@@ -223,7 +223,7 @@ getGeneAlleleStat <- function(repertoire, reference = NULL, call="v_call") {
       
       ## add missing alleles and genes for later statistics
       mis_alleles <- alleles[!alleles %in% allele_data$allele]
-      mis_gene <- genes[!genes %in% gene_data$gene]
+      mis_gene <- unique(genes[!genes %in% gene_data$gene]) # one row per gene, not per allele
       
       if(length(mis_alleles)!=0) allele_data <- bind_rows(allele_data, data.frame("allele" = mis_alleles,
                                                    "frequency" = 0,
