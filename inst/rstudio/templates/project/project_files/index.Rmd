@@ -91,12 +91,15 @@ printParams(params)
 ```
 
 
-```{r warning=FALSE}
+```{r warning=FALSE, results='asis'}
 repertoire <- airr::read_rearrangement(params$rep)
 # Downsampling unless check box unticked
 num_keep <- 5000
 if (params$downsample & nrow(repertoire) > num_keep) {
+  n_in <- nrow(repertoire)
+  set.seed(12345) # same input gives the same report
   repertoire <- repertoire[sample(nrow(repertoire), size = num_keep),]
+  cat("\n\nDownsampled from", n_in, "to", num_keep, "sequences (seed 12345).\n\n")
 }
 
 
@@ -141,8 +144,8 @@ if (length(missing_columns) > 0) {
             formattedWarningMeassage("Required `sequence_alignment` is empty.")
         }
     }
-    #kbl(data.table(column_name = missing_columns))
-    writeLines(paste0(missing_columns, collapse = ","))
+    pct_missing <- round(100 * colMeans(is.na(repertoire[missing_columns])), 1)
+    print(kable(data.frame(column = missing_columns, percent_missing = pct_missing), row.names = FALSE))
 }
 ```
 

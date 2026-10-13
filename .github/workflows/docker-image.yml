@@ -34,6 +34,10 @@ jobs:
           install.packages(c("airr", "alakazam", "ape", "ggpubr", "kableExtra", "markdown", "optparse", "tigger"))
         shell: Rscript {0}
 
+      # rocker/verse's TeX Live lacks these and its tlmgr is too old to auto-install them
+      - name: Install LaTeX packages
+        run: tlmgr update --self && tlmgr install amsfonts booktabs caption
+
       - name: Document
         run: |
           devtools::document()

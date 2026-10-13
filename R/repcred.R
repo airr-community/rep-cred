@@ -28,7 +28,6 @@
 #' @import      bookdown
 #' @import      stringi
 #' @import      tidyr
-#' @import      xfun
 #' @import      optparse
 #' @importFrom  airr        read_rearrangement write_rearrangement validate_airr
 #' @importFrom  ggpubr      theme_pubclean

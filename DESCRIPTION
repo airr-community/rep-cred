@@ -9,7 +9,7 @@ Title: Repertoire Credibility
 Description: RepCred: Repertoire Credibility. Tools to evaluate the credibility 
              adaptive immune receptor repertoires.
 License: CC BY-SA 4.0
-BugReports: https://github.com/airr-community/rep-cred
+BugReports: https://github.com/airr-community/rep-cred/issues
 LazyData: true
 BuildVignettes: true
 VignetteBuilder: knitr

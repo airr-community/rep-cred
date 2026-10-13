@@ -45,10 +45,10 @@ detail_nucleotide <-
     cat(paste0(
       non,
       ": found in ",
-      n_rows,
-      " sequence(s). ",
-      n_total,
-      " in total (",
+      n_rows, "/", length(non_nucs),
+      " sequence(s) (", round(100 * n_rows / length(non_nucs), 2), "%), ",
+      n_total, "/", total_pos,
+      " of all nucleotides (",
       perc,
       "%)\n"
     ))
@@ -70,8 +70,9 @@ detail_nucleotide <-
 #' @return  a list of descriptive statistics of the non-nucliotide characters
 #' @export
 check_nucleotides <- function(repertoire) {
+  # drop NA sequences first so row indices and totals line up
+  repertoire = repertoire[!is.na(repertoire$sequence), ]
   non_nucs = str_replace_all(repertoire$sequence, "[ACGTacgt]", "")
-  non_nucs = non_nucs[!is.na(non_nucs)]
   all_non = paste0(non_nucs, collapse = "")
   nons = unique(strsplit(all_non, "")[[1]])
   
