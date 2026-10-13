@@ -32,28 +32,95 @@ vignette: >
   %\usepackage[utf8]{inputenc}
 ---
 
-## rep-cred
+## Introduction
 
-TODO: describe package
+Good analysis requires good data, but how can a high-quality AIRR dataset be
+distinguished from a low-quality one? RepCred identifies and reports several key
+metrics that can indicate potential problems in a repertoire. Modeled after
+FastQC, it provides an easily digestible summary for novices and experts alike.
+
+The only input required is a file describing IG and/or TCR rearrangements in the
+[AIRR TSV format](https://docs.airr-community.org/en/stable/datarep/rearrangements.html).
+Optionally, the germline reference set used for annotation (one or more FASTA files)
+can be provided; gene and allele calls are then checked against it, and calls that
+are absent from the reference are listed in the report.
+
+The report contains:
+
+- **Quality control stats**: AIRR compliance, and the percentage of rows with missing
+  data in each column.
+- **Non-nucleotides in sequence**: characters other than A, C, G, T in `sequence`.
+- **Statistics**: productive vs. non-productive sequences, and sequence length
+  distributions.
+- **Annotation calls statistics**: number of unique allele calls per gene and relative
+  gene usage.
+- **General statistics**: hot/cold spot counts and GC content (requires
+  `sequence_alignment`).
+- **Possible chimerisms**: CDR3 sequences associated with more than one V gene.
+
+By default, repertoires are randomly downsampled to 5000 rearrangements, with a
+fixed seed so that the same input gives the same report.
+
+RepCred is maintained by the
+[Software Working Group](https://www.antibodysociety.org/the-airr-community/airr-working-groups/software/)
+of the Adaptive Immune Receptor Repertoire Community (AIRR-C).
 
 ## Usage
 
-There are several ways to generate the credibility repertoire. All of them use the same
-report template. 
+There are several ways to generate the credibility report. All of them use the same
+report template. The examples below use the small example repertoire included in the
+package.
+
+```{r, eval=FALSE}
+library(repcred)
+rep_file <- system.file("extdata", "ExampleDb.tsv", package = "repcred")
+```
 
 ### R function
 
-TODO: Generate the report from R with `repcred_report()`
+`repcred_report()` renders the report and returns the path to it. `format` is one of
+`"html"`, `"pdf"` or `"all"`; pass `downsample = FALSE` to analyse every rearrangement.
+
+```{r, eval=FALSE}
+report <- repcred_report(rep_file, outdir = "repcred-report", format = "html")
+```
+
+To check the calls against the germline reference used for annotation:
+
+```{r, eval=FALSE}
+report <- repcred_report(rep_file, outdir = "repcred-report",
+                         genome_file = c("IGHV.fasta", "IGHD.fasta", "IGHJ.fasta"))
+```
 
 ### Shiny app
 
-TODO: Launch the shiny app from R with `repcredWeb`
+`repcredWeb()` launches a web application where the repertoire (and, optionally,
+germline reference files) can be uploaded and the report viewed and downloaded.
 
-### RScript
+```{r, eval=FALSE}
+repcredWeb()
+```
 
-TODO: Use the RScript `repcred.R`.
+### Command line
+
+The script `repcred.R` is installed with the package:
+
+```{bash, eval=FALSE}
+Rscript $(Rscript -e 'cat(system.file("repcred.R", package="repcred"))') \
+    -r ExampleDb.tsv -o repcred-report -f html
+```
+
+Options: `-r` repertoire file, `-o` output directory, `-f` format (`html`, `pdf`, `all`),
+`-d` downsample (`TRUE`/`FALSE`), `-g` comma separated germline FASTA files.
+
+The same command is available in the Docker image:
+
+```{bash, eval=FALSE}
+docker run --rm -v $(pwd):/home:z airrc/rep-cred:latest repcred -r ExampleDb.tsv -o repcred-report
+```
 
 ### RStudio
 
-TODO: Create a project skeleton from RStudio.
-
+To customise the report, create a project with the report template from RStudio:
+*File > New Project > New Directory > AIRR-C: Repertoire Credibility Project*. The report is
+`index.Rmd` and can be edited and rendered with bookdown.
