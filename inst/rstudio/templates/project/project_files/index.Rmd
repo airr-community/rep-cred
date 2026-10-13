@@ -90,6 +90,10 @@ if (!is.null(params$genome_file)) {
 } 
 
 printParams(params)
+
+# MD5 checksums: identify exactly which input files the report was made from
+input_files <- c(params$rep, params$genome_file)
+print(kable(data.frame(file = basename(input_files), md5 = unname(tools::md5sum(input_files)))))
 ```
 
 

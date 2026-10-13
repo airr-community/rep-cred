@@ -59,7 +59,9 @@ The report contains:
 - **Possible chimerisms**: CDR3 sequences associated with more than one V gene.
 
 By default, repertoires are randomly downsampled to 5000 rearrangements, with a
-fixed seed so that the same input gives the same report.
+fixed seed so that the same input gives the same report. The number can be changed
+(`downsample_n` in R, `-n` on the command line). The report lists the MD5 checksum
+of the repertoire and germline files it was generated from.
 
 RepCred is maintained by the
 [Software Working Group](https://www.antibodysociety.org/the-airr-community/airr-working-groups/software/)
