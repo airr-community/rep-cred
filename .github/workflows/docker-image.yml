@@ -25,7 +25,7 @@ jobs:
           ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install dependencies
         run: |
@@ -72,7 +72,7 @@ jobs:
           echo "ARTIFACT_NAME=$artifact_name" >> $GITHUB_ENV
            
       - name: Archive results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: "repcred-report_${{ env.ARTIFACT_NAME }}"
           path: |
@@ -85,18 +85,18 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2      
+        uses: docker/setup-qemu-action@v4      
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v4
       - name: Login to Docker Hub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
       - name: Build and push to Docker
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v7
         with:
           context: ./docker
           file: ./docker/Dockerfile
@@ -125,7 +125,7 @@ jobs:
     
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         
       - name: Run repcred command
         run: |
