@@ -1,5 +1,5 @@
 [![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)]()
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![Documentation Status](https://readthedocs.org/projects/rep-cred/badge/?version=latest)](https://rep-cred.readthedocs.io/en/latest/?badge=latest)
 [![Docker Image CI](https://github.com/airr-community/rep-cred/actions/workflows/docker-image.yml/badge.svg)](https://github.com/airr-community/rep-cred/actions/workflows/docker-image.yml)
 
@@ -58,7 +58,7 @@ docker run --rm -v $(pwd):/home:z airrc/rep-cred:latest repcred -r ExampleDb.tsv
 
 ## Pre-requisites
 
-RepCred requires a recent version of [pandoc](https://pandoc.org). This is installed with Rstudio and the easiest approach is to check that you are using a recent version, although other installation methods are described in the [documentation](https://bookdown.org/yihui/rmarkdown-cookbook/install-pandoc.html).
+RepCred requires a recent version of [pandoc](https://pandoc.org). This is installed with Rstudio and the easiest approach is to check that you are using a recent version, although other installation methods are described in the [documentation](https://pkg.yihui.org/rmarkdown-cookbook/install-pandoc.html).
  
 ## Installing RepCred
 
