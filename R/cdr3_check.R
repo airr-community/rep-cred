@@ -88,18 +88,16 @@ getVCalls <-
            original_data,
            include_ambiguous_calls) {
     joint = vector()
-    sequence_id = which(colnames(original_data) == "sequence_id")
     num_occur <- data.frame(table(cdr3_seqs_info$cdr3_seqs))
     duplicates = cdr3_seqs_info[cdr3_seqs_info$cdr3_seqs %in% num_occur$Var1[num_occur$Freq >
                                                                                1], ]
     for (seq in unique(duplicates$cdr3_seqs)) {
       duplicated_seqs = duplicates[duplicates$cdr3_seqs == seq, ]
       v_call_genes = vector()
-      related_row = vector()
       gene_matches = array()
       seq_ids  = vector()
       for (row_num in duplicated_seqs$row_number) {
-        v_call_val = original_data[row_num, "v_call"]
+        v_call_val = original_data[["v_call"]][row_num]
         if (include_ambiguous_calls == FALSE &
             grepl(",", v_call_val, fixed = TRUE)) {
           next
@@ -113,9 +111,7 @@ getVCalls <-
           for (single_match in gene_matches[[1]][, i]) {
             if (!is.na(single_match)) {
               v_call_genes = c(v_call_genes, single_match)
-              related_row = c(related_row, row_num + 1)
-              seq_ids = c(seq_ids, original_data[row_num, sequence_id, with =
-                                                   FALSE])
+              seq_ids = c(seq_ids, original_data[["sequence_id"]][row_num])
             }
           }
           i = i + 1
