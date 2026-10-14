@@ -9,7 +9,7 @@ Title: Repertoire Credibility
 Description: Tools to evaluate the credibility of adaptive immune receptor
              repertoires.
 License: CC BY-SA 4.0
-BugReports: https://github.com/airr-community/rep-cred/issues
+BugReports: https://github.com/airr-community/repcred/issues
 LazyData: true
 BuildVignettes: true
 VignetteBuilder: knitr

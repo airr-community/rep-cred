@@ -1,7 +1,7 @@
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![Documentation Status](https://readthedocs.org/projects/rep-cred/badge/?version=latest)](https://rep-cred.readthedocs.io/en/latest/?badge=latest)
-[![Docker Image CI](https://github.com/airr-community/rep-cred/actions/workflows/docker-image.yml/badge.svg)](https://github.com/airr-community/rep-cred/actions/workflows/docker-image.yml)
+[![Documentation Status](https://readthedocs.org/projects/repcred/badge/?version=latest)](https://repcred.readthedocs.io/en/latest/?badge=latest)
+[![Docker Image CI](https://github.com/airr-community/repcred/actions/workflows/docker-image.yml/badge.svg)](https://github.com/airr-community/repcred/actions/workflows/docker-image.yml)
 
 
 
@@ -26,7 +26,7 @@ RepCred is maintained by the
 [Software Working Group](https://www.antibodysociety.org/the-airr-community/airr-working-groups/software/)
 of the [Adaptive Immune Receptor Repertoire Community (AIRR-C)](https://www.antibodysociety.org/the-airr-community/).
 To get help or report a bug, please open an
-[issue](https://github.com/airr-community/rep-cred/issues). Contributions are
+[issue](https://github.com/airr-community/repcred/issues). Contributions are
 welcome, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 # Running RepCred
@@ -36,26 +36,26 @@ welcome, see [CONTRIBUTING.md](CONTRIBUTING.md).
 Pull the container:
 
 ```
-docker pull airrc/rep-cred:latest
+docker pull ghcr.io/airr-community/repcred:latest
 ```
 
 To launch the shiny application use the command below. Then open in your browser
 ` http://localhost:3838`. 
 
 ```
-docker run --rm -ti --user shiny -p 3838:3838 airrc/rep-cred:latest
+docker run --rm -ti --user shiny -p 3838:3838 ghcr.io/airr-community/repcred:latest
 ```
 
 If you are using linux, you may need to use the command line
 
 ```
-docker run --rm --network host -ti --user shiny -p 3838:3838 airrc/rep-cred:latest
+docker run --rm --network host -ti --user shiny -p 3838:3838 ghcr.io/airr-community/repcred:latest
 ```
 
 To open a terminal inside the container use:
 
 ```
-docker run --rm -ti --user shiny -p 3838:3838 airrc/rep-cred:latest bash
+docker run --rm -ti --user shiny -p 3838:3838 ghcr.io/airr-community/repcred:latest bash
 ```
 
 ## Docker - command line
@@ -63,19 +63,19 @@ docker run --rm -ti --user shiny -p 3838:3838 airrc/rep-cred:latest bash
 Pull the container:
 
 ```
-docker pull airrc/rep-cred:latest
+docker pull ghcr.io/airr-community/repcred:latest
 ```
 
 Get example data:
 
 ```
-wget https://raw.githubusercontent.com/airr-community/rep-cred/master/inst/extdata/ExampleDb.tsv
+wget https://raw.githubusercontent.com/airr-community/repcred/master/inst/extdata/ExampleDb.tsv
 ```
 
 Run `repcred`:
 
 ```
-docker run --rm -v $(pwd):/home:z airrc/rep-cred:latest repcred -r ExampleDb.tsv -o repcred-report
+docker run --rm -v $(pwd):/home:z ghcr.io/airr-community/repcred:latest repcred -r ExampleDb.tsv -o repcred-report
 ```
 
 ## Local Installation
@@ -89,7 +89,7 @@ RepCred requires a recent version of [pandoc](https://pandoc.org). This is insta
 Repdred can be installed from github:
 
 ```
-devtools::install_github('airr-community/rep-cred')
+devtools::install_github('airr-community/repcred')
 ```
 
 ## Running RepCred
@@ -103,4 +103,4 @@ repcredWeb()
 
 ## Binder
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/airr-community/rep-cred/master?urlpath=shiny/binder/)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/airr-community/repcred/master?urlpath=shiny/binder/)

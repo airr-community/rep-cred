@@ -38,6 +38,9 @@ Bug fixes:
 
 General:
 
++ The Docker image is now published to the GitHub Container Registry as
+  `ghcr.io/airr-community/repcred` instead of Docker Hub (`airrc/rep-cred`).
+
 + Added `tigger` and `markdown` to the dependencies.
 + Removed the unused `pairwiseAlignment` and `nucleotideSubstitutionMatrix`
   imports, which moved from Biostrings to pwalign in Bioconductor 3.19, and

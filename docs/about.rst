@@ -34,4 +34,4 @@ Authors
 .. |Lifecycle: experimental| image:: https://img.shields.io/badge/lifecycle-experimental-orange.svg
    :target: 
 .. |Binder| image:: https://mybinder.org/badge_logo.svg
-   :target: https://mybinder.org/v2/gh/airr-community/rep-cred/master?urlpath=shiny/binder/
+   :target: https://mybinder.org/v2/gh/airr-community/repcred/master?urlpath=shiny/binder/

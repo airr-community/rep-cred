@@ -5,7 +5,7 @@ feature requests and pull requests are welcome.
 
 ## Reporting a problem
 
-Open an [issue](https://github.com/airr-community/rep-cred/issues) and include:
+Open an [issue](https://github.com/airr-community/repcred/issues) and include:
 
 - how you ran RepCred (Shiny app, `repcred` command line, Docker, or `repcred_report()` in R),
 - the command or options used,
