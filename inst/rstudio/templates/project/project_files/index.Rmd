@@ -372,7 +372,10 @@ appearance_info <- bind_rows(v_usage_info$gene_data,
 
 appearance_info$segment <- substr(appearance_info$gene,1,4)
 
+# Gene-usage figures: about 0.15 in per gene in the largest segment, capped
+# so the figure fits on one PDF page.
 size <- max(table(appearance_info$segment))
+gene_fig_height <- min(0.15 * size + 1, 8.5)
 
 if(!is.null(germline_reference)) {
   genes_not_in_rep <- appearance_info$gene[!appearance_info$in_ref]
@@ -387,7 +390,7 @@ if(!is.null(germline_reference)) {
 
 ## Number of unique allele calls per gene
 
-```{r fig.height=size, warning=FALSE, fig.subcap=c("Unique allele calls per gene. Each row is a different gene segment (V/D/J). The x-axis is the different genes, and the y-axis is the count."),results="asis"}
+```{r fig.height=gene_fig_height, fig.asp=NULL, warning=FALSE, fig.subcap=c("Unique allele calls per gene. Each row is a different gene segment (V/D/J). The x-axis is the different genes, and the y-axis is the count."),results="asis"}
 ggplot2::ggplot(appearance_info, 
   ggplot2::aes(x = !!as.name("gene"), y = !!as.name("count_unique_alleles"))) +
   ggplot2::geom_col() + 
@@ -402,7 +405,7 @@ ggplot2::ggplot(appearance_info,
 
 ## Relative usage
 
-```{r fig.height=size, warning=FALSE, fig.subcap=c("Gene usage. Each row is a different gene segment (V/D/J). The x-axis is the different genes, and the y-axis is the relative usage."),results="asis"}
+```{r fig.height=gene_fig_height, fig.asp=NULL, warning=FALSE, fig.subcap=c("Gene usage. Each row is a different gene segment (V/D/J). The x-axis is the different genes, and the y-axis is the relative usage."),results="asis"}
 
 usage_info <- appearance_info %>%
   dplyr::group_by(!!as.name("segment")) %>%
