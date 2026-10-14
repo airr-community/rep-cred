@@ -22,7 +22,7 @@ ui <- fluidPage(
         tags$img(src = "logo.svg", width = "100px"),
         tags$h1("RepCred"),
         tags$strong("Credibility of a repertoire"),
-        tags$p("Summary statistics and graphical information to quickly asses the quality of a repertoire."),
+        tags$p("Summary statistics and graphical information to quickly assess the quality of a repertoire."),
         tabsetPanel(
             tabPanel("RepCred",
                      style = "width:100%",
