@@ -18,3 +18,24 @@
 	color:pink;
 	width: 35px;
 }
+
+.repcred-results {
+    margin-top: 20px;
+}
+
+.repcred-results > .panel-heading .badge {
+    margin-left: 6px;
+}
+
+.repcred-run > .panel-heading .text-muted,
+.repcred-run > .panel-heading .label {
+    margin-left: 8px;
+}
+
+.repcred-run .dl-horizontal dt {
+    width: 110px;
+}
+
+.repcred-run .dl-horizontal dd {
+    margin-left: 125px;
+}
