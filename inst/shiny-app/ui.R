@@ -56,8 +56,12 @@ ui <- fluidPage(
                      #            "missing genes to be pin pointed and gene usage ",
                      #            "to be analysed."),
                      
-                     # Sumrep 
-                     uiOutput("condInput"),      
+                     conditionalPanel("input.input_chk",
+                                      fileInput("genome",
+                                                "Choose germline reference FASTA File",
+                                                multiple = TRUE,
+                                                accept = c("text/tab-separated-values",".fasta",".fna",".ffn",".frn",".fa","text/plain"))),
+                     
                      #selectInput("sumrep" , "Select Sumrep stats to run. Full stats takes longer to run but gives pairwise statistics , Basic statistics is faster but contains less statistics." , choices=c("Full sumrep stats" , "Basic sumrep stats")),
                      actionButton("go", "Run analysis"),
                      
