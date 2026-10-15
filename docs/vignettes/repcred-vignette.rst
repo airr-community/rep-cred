@@ -1,7 +1,7 @@
 Immcantation reports
 ====================
 
-rep-cred
+repcred
 --------
 
 TODO: describe package

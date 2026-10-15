@@ -1,4 +1,4 @@
-##### rep-cred functions for index.Rmd
+##### repcred functions for index.Rmd
 #' @include repcred.R
 NULL
 

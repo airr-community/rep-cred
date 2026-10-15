@@ -6,7 +6,7 @@ easily digestible summary that can be used by novices and experts alike.
 
 The only requirement to run RepCred is a file describing IG and/or TCR 
 rearrangements in the [AIRR TSV format](https://docs.airr-community.org/en/stable/datarep/rearrangements.html). 
-You can find a small <a href="https://raw.githubusercontent.com/airr-community/rep-cred/master/inst/extdata/ExampleDb.tsv" target="_blank">example repertoire here</a>.
+You can find a small <a href="https://raw.githubusercontent.com/airr-community/repcred/master/inst/extdata/ExampleDb.tsv" target="_blank">example repertoire here</a>.
 
 
 By default, all repertoires are randomly down-sampled to 5000 rearrangements; 
@@ -19,7 +19,7 @@ provided to RepCred as well, so that SHM and related statistics can be
 calculated accurately.
 
 To get help or report a bug, please file an issue on RepCred’s github 
-page at [https://github.com/airr-community/rep-cred/issues](https://github.com/airr-community/rep-cred/issues).
+page at [https://github.com/airr-community/repcred/issues](https://github.com/airr-community/repcred/issues).
 
 RepCred is designed to be modular and accept new functions/metrics with ease. We welcome pull requests 
 (please see [https://github.com/airr-community/airr-standards/blob/master/CONTRIBUTING.rst](https://github.com/airr-community/airr-standards/blob/master/CONTRIBUTING.rst)). Other feature requests will be evaluated and prioritized.

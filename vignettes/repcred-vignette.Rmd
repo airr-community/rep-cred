@@ -120,7 +120,7 @@ Options: `-r` repertoire file, `-o` output directory, `-f` format (`html`, `pdf`
 The same command is available in the Docker image:
 
 ```{bash, eval=FALSE}
-docker run --rm -v $(pwd):/home:z airrc/rep-cred:latest repcred -r ExampleDb.tsv -o repcred-report
+docker run --rm -v $(pwd):/home:z ghcr.io/airr-community/repcred:latest repcred -r ExampleDb.tsv -o repcred-report
 ```
 
 ### RStudio
